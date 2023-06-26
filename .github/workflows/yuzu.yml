@@ -43,7 +43,6 @@ jobs:
             }).then(res => res.data.items);
             for (const pr of prs) {
               let pn = pr.number;
-              if (pn == 10473) { continue; }
               console.log(`Merge "${pr.title}" ${pr.pull_request.html_url}`);
               await myExec(`git fetch "https://github.com/yuzu-emu/yuzu.git" "pull/${pn}/head:pr-${pn}" -f --no-recurse-submodules`);
               await myExec(`git merge --squash "pr-${pn}"`)
