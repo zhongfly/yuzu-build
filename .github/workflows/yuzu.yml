@@ -22,6 +22,7 @@ jobs:
           git config --global pull.rebase true
           git config --global rebase.autoStash true
           git config --global fetch.prune true
+          git revert --no-edit -m 1 87b9b5d10fa4a30c8eb56f9de44ba0c24d57ae77
       - name: Install dependencies
         # due to how chocolatey works, only cmd.exe is supported here
         shell: cmd
@@ -41,8 +42,9 @@ jobs:
               per_page: 100
             }).then(res => res.data.items);
             for (const pr of prs) {
-              console.log(`Merge "${pr.title}" ${pr.pull_request.html_url}`);
               let pn = pr.number;
+              if (pn == 10473) { continue; }
+              console.log(`Merge "${pr.title}" ${pr.pull_request.html_url}`);
               await myExec(`git fetch "https://github.com/yuzu-emu/yuzu.git" "pull/${pn}/head:pr-${pn}" -f --no-recurse-submodules`);
               await myExec(`git merge --squash "pr-${pn}"`)
               await myExec(`git commit -m "${pr.title}" `)
